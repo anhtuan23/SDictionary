@@ -3,14 +3,14 @@ package com.dotakoubou.sentencedictionary.RecyclerView;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 
 /**
  * Created by dotua on 31-Dec-16.
  */
 
-public class AutofitRecyclerView extends RecyclerView {
+public class AutofitRecyclerView extends DragSelectRecyclerView {
     private GridLayoutManager manager;
     private int columnWidth = -1;
 
