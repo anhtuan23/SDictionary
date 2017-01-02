@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Sentence Dictionary</string>
+    <string name="default_welcome_text">今天很残酷，明天更残酷，后天很美好，但是绝大部分人死在明天晚上，看不到后天的太阳。</string>
+    <string name="search_view_hint">Search sentences … </string>
 </resources>
