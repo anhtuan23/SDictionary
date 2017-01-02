@@ -17,6 +17,7 @@ public class WordListHelper {
 
     public static void buildWordListFromRawText(String text) {
         wordList.clear();
+        text = text.replaceAll("\\s+","");//remove all whitespace
         for (char c : text.toCharArray()) {
             wordList.add(String.valueOf(c));
         }

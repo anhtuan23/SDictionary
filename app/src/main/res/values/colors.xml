@@ -7,6 +7,6 @@
 
     <color name="grid_label_text_normal">#000</color>
     <color name="grid_label_text_selected">#FFF</color>
-    <color name="grid_background_normal">#FFF</color>
-    <color name="grid_background_selected">#AAA</color>
+    <color name="grid_background_normal">#CCFFFFFF</color>
+    <color name="grid_background_selected">#CCAAAAAA</color>
 </resources>
