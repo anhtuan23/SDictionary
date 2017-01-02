@@ -65,13 +65,13 @@ public abstract class DragSelectRecyclerViewAdapter<VH extends RecyclerView.View
         if (!isIndexSelectable(index))
             selected = false;
         if (selected) {
-            if (!mSelectedIndices.contains(index) &&
+            if (!mSelectedIndices.contains(index) && //if index is unselected
                     (mMaxSelectionCount == -1 ||
                             mSelectedIndices.size() < mMaxSelectionCount)) {
                 mSelectedIndices.add(index);
                 notifyItemChanged(index);
             }
-        } else if (mSelectedIndices.contains(index)) {
+        } else if (mSelectedIndices.contains(index)) { //if already selected then remove
             mSelectedIndices.remove((Integer) index);
             notifyItemChanged(index);
         }
@@ -86,6 +86,7 @@ public abstract class DragSelectRecyclerViewAdapter<VH extends RecyclerView.View
             } else if (mMaxSelectionCount == -1 ||
                     mSelectedIndices.size() < mMaxSelectionCount) {
                 mSelectedIndices.add(index);
+//                mSelectedIndices.clear();
                 selectedNow = true;
             }
             notifyItemChanged(index);

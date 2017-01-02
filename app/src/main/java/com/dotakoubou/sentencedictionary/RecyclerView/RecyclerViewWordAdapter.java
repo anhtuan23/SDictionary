@@ -2,6 +2,7 @@ package com.dotakoubou.sentencedictionary.RecyclerView;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,7 +20,6 @@ public class RecyclerViewWordAdapter extends DragSelectRecyclerViewAdapter<WordV
 
     public interface ClickListener {
         void onClick(int index);
-
         void onLongClick(int index);
     }
 
@@ -48,11 +48,18 @@ public class RecyclerViewWordAdapter extends DragSelectRecyclerViewAdapter<WordV
         holder.bindModel(position);
 
         if (isIndexSelected(position)) {
-//            holder.setTextViewBackgroundColor(R.color.grid_background_selected);
-            holder.setTextViewTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_selected));
+            Log.d("BIND_VIEW_HOLDER", position + " selected");
+
+            holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(activity, R.color.grid_background_selected));
+            holder.wordTextView.setTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_selected));
         } else {
-//            holder.setTextViewBackgroundColor(R.color.grid_background_normal);
-            holder.setTextViewTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_normal));
+            Log.d("BIND_VIEW_HOLDER", position + " not selected");
+
+            holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(activity, R.color.grid_background_normal));
+            holder.wordTextView.setTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_normal));
         }
     }
+
 }
