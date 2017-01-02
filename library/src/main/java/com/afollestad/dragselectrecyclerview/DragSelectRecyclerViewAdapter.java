@@ -78,7 +78,7 @@ public abstract class DragSelectRecyclerViewAdapter<VH extends RecyclerView.View
         fireSelectionListener();
     }
 
-    public final boolean toggleSelected(int index) {
+    public final boolean toggleSelected(int index) { //
         boolean selectedNow = false;
         if (isIndexSelectable(index)) {
             if (mSelectedIndices.contains(index)) {
@@ -86,13 +86,23 @@ public abstract class DragSelectRecyclerViewAdapter<VH extends RecyclerView.View
             } else if (mMaxSelectionCount == -1 ||
                     mSelectedIndices.size() < mMaxSelectionCount) {
                 mSelectedIndices.add(index);
-//                mSelectedIndices.clear();
                 selectedNow = true;
             }
             notifyItemChanged(index);
         }
         fireSelectionListener();
         return selectedNow;
+    }
+
+    //ME
+    public void decideSelectStateWhenClicked(int index) {
+        if (mSelectedIndices.contains(index)) { //if the clicked position is in the selected array, do nothing
+//                mSelectedIndices.remove((Integer) index);
+        } else if (mMaxSelectionCount == -1 ||
+                mSelectedIndices.size() < mMaxSelectionCount) { //else, clear selection
+            mSelectedIndices.add(index);
+            clearSelected();
+        }
     }
 
     protected boolean isIndexSelectable(int index) {
@@ -168,8 +178,32 @@ public abstract class DragSelectRecyclerViewAdapter<VH extends RecyclerView.View
         fireSelectionListener();
     }
 
+    public final int[] getSelectedArray() {
+        if (mSelectedIndices.size() == 0)
+            return new int[] {0}; //if no item is selected return int[] contains 0
+        int[] intArray = new int[mSelectedIndices.size()];
+        if (mSelectedIndices.get(0) <= mSelectedIndices.get(mSelectedIndices.size() - 1)) {
+            //compare the first and last
+            //if first < last, just add each item
+            for (int i = 0; i < intArray.length; i++) {
+                intArray[i] = mSelectedIndices.get(i);
+            }
+        } else { //else first > last, add each item in reversed order
+            for (int i = 0; i < intArray.length; i++) {
+                intArray[intArray.length - 1 - i] = mSelectedIndices.get(i);
+            }
+        }
+
+        return intArray;
+    }
+
     public final int getSelectedCount() {
         return mSelectedIndices.size();
+    }
+
+    //ME
+    public boolean isNoneSelected() {
+        return getSelectedCount() == 0;
     }
 
     public final Integer[] getSelectedIndices() {

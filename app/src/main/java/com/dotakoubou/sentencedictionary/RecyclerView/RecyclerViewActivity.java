@@ -1,19 +1,24 @@
 package com.dotakoubou.sentencedictionary.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
+import com.dotakoubou.sentencedictionary.Helper.WordListHelper;
 import com.dotakoubou.sentencedictionary.R;
+import com.dotakoubou.sentencedictionary.RecyclerView.TouchHandler.RecyclerViewClickListener;
+import com.dotakoubou.sentencedictionary.RecyclerView.TouchHandler.RecyclerViewTouchListener;
 
 /**
  * Created by dotua on 31-Dec-16.
  */
 
 public class RecyclerViewActivity extends Activity
-    implements RecyclerViewWordAdapter.ClickListener,
-        DragSelectRecyclerViewAdapter.SelectionListener {
+        implements DragSelectRecyclerViewAdapter.SelectionListener {
 
     private RecyclerViewWordAdapter dragSelectRecyclerViewAdapter;
     private AutofitRecyclerView recyclerView = null;
@@ -24,7 +29,7 @@ public class RecyclerViewActivity extends Activity
 
     public void setAdapter(Activity activity) {
         dragSelectRecyclerViewAdapter =
-                new RecyclerViewWordAdapter(activity, this);
+                new RecyclerViewWordAdapter(activity);
         getRecyclerView().setAdapter(dragSelectRecyclerViewAdapter);
     }
 
@@ -34,10 +39,66 @@ public class RecyclerViewActivity extends Activity
 
     public RecyclerView getRecyclerView() {
         if (recyclerView == null) {
-//            recyclerView = new AutofitRecyclerView(this);
             recyclerView = (AutofitRecyclerView) findViewById(R.id.recycler_view);
             recyclerView.setHasFixedSize(true);
-//            setContentView(recyclerView);
+
+            recyclerView.addOnItemTouchListener(
+                    new RecyclerViewTouchListener(
+                            getApplicationContext(),
+                            recyclerView,
+                            new RecyclerViewClickListener() {
+                                @Override
+                                public void onClick(View view, int position) {
+                                }
+
+                                @Override
+                                public void onSingleClick(View view, int position) {
+                                    int colorDictSendID = view.getContext()
+                                            .getResources()
+                                            .getInteger(R.integer.COLOR_DICT_INTENT_ID);
+                                    if (dragSelectRecyclerViewAdapter.isNoneSelected()) {
+                                        //if the clicked word is the first, send word to search intent
+                                        WordListHelper.sendWordIntent(view.getContext(), new int[]{position}, colorDictSendID);
+                                    } else if (dragSelectRecyclerViewAdapter.isIndexSelected(position)) {
+                                        /*if the clicked word is within the string of words selected,
+                                            send the string to search intent*/
+                                        int[] selectedPostions = dragSelectRecyclerViewAdapter.getSelectedArray();
+                                        WordListHelper.sendWordIntent(view.getContext(), selectedPostions, colorDictSendID);
+                                    } else {
+                                        //if the clicked word is outside of selected string, clear selection
+                                        dragSelectRecyclerViewAdapter.decideSelectStateWhenClicked(position);
+                                    }
+                                }
+
+                                @Override
+                                public void onLongClick(View view, int position) {
+                                    Vibrator v = (Vibrator) view.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                                    v.vibrate(30); // Vibrate for 30 milliseconds
+                                    recyclerView.setDragSelectActive(true, position);
+                                }
+
+                                @Override
+                                public void onDoubleClick(View view, int position) {
+                                    Vibrator v = (Vibrator) view.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                                    v.vibrate(30); // Vibrate for 30 milliseconds
+                                    int sendTextIntentID = view.getContext()
+                                            .getResources()
+                                            .getInteger(R.integer.SEND_TEXT_INTENT_ID);
+                                    if (dragSelectRecyclerViewAdapter.isIndexSelected(position)) {
+                                        /*if the clicked word is within the string of words selected,
+                                            send the string to search intent*/
+                                        int[] selectedPostions = dragSelectRecyclerViewAdapter.getSelectedArray();
+                                        WordListHelper.sendWordIntent(view.getContext(), selectedPostions, sendTextIntentID);
+                                    } else {//if the clicked word is the first, send word to search intent
+                                        WordListHelper.sendWordIntent(view.getContext(), new int[]{position}, sendTextIntentID);
+                                    }
+                                }
+
+                                @Override
+                                public void clearSelection() {
+                                    dragSelectRecyclerViewAdapter.clearSelected();
+                                }
+                            }));
         }
         return (recyclerView);
     }
@@ -47,18 +108,8 @@ public class RecyclerViewActivity extends Activity
         super.onSaveInstanceState(outState);
         // Save selected indices
         dragSelectRecyclerViewAdapter.saveInstanceState(outState);
-//        if (mCab != null) mCab.saveState(outState);
     }
 
-    @Override
-    public void onClick(int index) {
-        dragSelectRecyclerViewAdapter.toggleSelected(index);
-    }
-
-    @Override
-    public void onLongClick(int index) {
-        recyclerView.setDragSelectActive(true, index);
-    }
 
     @Override
     public void onDragSelectionChanged(int count) {
@@ -81,6 +132,6 @@ public class RecyclerViewActivity extends Activity
 //        if (mAdapter.getSelectedCount() > 0)
 //            mAdapter.clearSelected();
 //        else
-            super.onBackPressed();
+        super.onBackPressed();
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="COLOR_DICT_INTENT_ID">1</integer>
+    <integer name="SEND_TEXT_INTENT_ID">2</integer>
+</resources>

@@ -2,7 +2,6 @@ package com.dotakoubou.sentencedictionary.RecyclerView;
 
 import android.app.Activity;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,16 +15,9 @@ import com.dotakoubou.sentencedictionary.R;
 
 public class RecyclerViewWordAdapter extends DragSelectRecyclerViewAdapter<WordViewHolder> {
     private Activity activity = null;
-    private final ClickListener mCallback;
 
-    public interface ClickListener {
-        void onClick(int index);
-        void onLongClick(int index);
-    }
-
-    public RecyclerViewWordAdapter(Activity activity, ClickListener callback) {
+    public RecyclerViewWordAdapter(Activity activity){
         super();
-        mCallback = callback;
         this.activity = activity;
     }
 
@@ -33,7 +25,7 @@ public class RecyclerViewWordAdapter extends DragSelectRecyclerViewAdapter<WordV
     public WordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = activity.getLayoutInflater()
                 .inflate(R.layout.recycler_view_cell, parent, false);
-        return (new WordViewHolder(v, mCallback));
+        return (new WordViewHolder(v));
 
     }
 
@@ -48,14 +40,12 @@ public class RecyclerViewWordAdapter extends DragSelectRecyclerViewAdapter<WordV
         holder.bindModel(position);
 
         if (isIndexSelected(position)) {
-            Log.d("BIND_VIEW_HOLDER", position + " selected");
-
+//            Log.d("BIND_VIEW_HOLDER", position + " selected");
             holder.cardView.setCardBackgroundColor(
                     ContextCompat.getColor(activity, R.color.grid_background_selected));
             holder.wordTextView.setTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_selected));
         } else {
-            Log.d("BIND_VIEW_HOLDER", position + " not selected");
-
+//            Log.d("BIND_VIEW_HOLDER", position + " not selected");
             holder.cardView.setCardBackgroundColor(
                     ContextCompat.getColor(activity, R.color.grid_background_normal));
             holder.wordTextView.setTextColor(ContextCompat.getColor(activity, R.color.grid_label_text_normal));
