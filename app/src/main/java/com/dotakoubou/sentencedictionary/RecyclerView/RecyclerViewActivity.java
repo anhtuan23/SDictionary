@@ -74,7 +74,10 @@ public class RecyclerViewActivity extends Activity
                                 public void onLongClick(View view, int position) {
                                     Vibrator v = (Vibrator) view.getContext().getSystemService(Context.VIBRATOR_SERVICE);
                                     v.vibrate(30); // Vibrate for 30 milliseconds
-                                    recyclerView.setDragSelectActive(true, position);
+                                    /*if long click item is out side of the selected string,
+                                        remove selected string then begin new choosing action*/
+                                    dragSelectRecyclerViewAdapter.clearSelected();
+                                    recyclerView.setDragSelectActive(true, position)    ;
                                 }
 
                                 @Override
